@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Starlift Local · Get set up</title>
+<style>
+:root{--bg:#0b0f0c;--card:#121815;--line:#1f2a24;--txt:#e8efe9;--mut:#8fa197;--acc:#3ddc6f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:32px 16px 64px}
+main{max-width:520px;margin:0 auto}
+.top{height:4px;background:var(--acc);position:fixed;inset:0 0 auto 0}
+h1{font-size:28px;line-height:1.15;margin-bottom:8px}
+p.sub{color:var(--mut);margin-bottom:24px}
+fieldset{border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px;background:var(--card)}
+legend{padding:0 6px;color:var(--acc);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+label{display:block;font-size:14px;color:var(--mut);margin:12px 0 6px}
+input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--txt);font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);border-color:transparent}
+.plan{display:flex;gap:10px;align-items:flex-start;margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:12px;cursor:pointer}
+.plan input{width:auto;margin-top:4px}
+.plan b{display:block}
+.plan small{color:var(--mut)}
+button{width:100%;padding:16px;border:0;border-radius:12px;background:var(--acc);color:#04210f;font-size:18px;font-weight:700;cursor:pointer;margin-top:8px}
+.fine{color:var(--mut);font-size:13px;margin-top:14px}
+#ok{display:none;margin-top:16px;color:var(--acc);font-weight:600}
+</style>
+</head>
+<body>
+<div class="top"></div>
+<main>
+  <h1>Let's get your review texts set up</h1>
+  <p class="sub">Two minutes. Once this is in, I handle everything else and send you a link for your front desk.</p>
+  <form id="f">
+    <fieldset>
+      <legend>Your business</legend>
+      <label for="negocio">Business name (as on Google)</label>
+      <input id="negocio" name="negocio" required>
+      <label for="legal">Legal business name (for the texting registration)</label>
+      <input id="legal" name="legal" required>
+      <label for="web">Website</label>
+      <input id="web" name="web" inputmode="url" placeholder="https://">
+      <label for="direccion">Business address</label>
+      <input id="direccion" name="direccion" required>
+      <label for="ein">EIN (leave empty if you're a sole proprietor)</label>
+      <input id="ein" name="ein" inputmode="numeric" placeholder="12-3456789">
+      <label for="zona">Time zone</label>
+      <select id="zona" name="zona">
+        <option value="America/New_York">Eastern</option>
+        <option value="America/Chicago">Central</option>
+        <option value="America/Denver">Mountain</option>
+        <option value="America/Phoenix">Arizona</option>
+        <option value="America/Los_Angeles">Pacific</option>
+      </select>
+    </fieldset>
+    <fieldset>
+      <legend>Where alerts go</legend>
+      <label for="dueno">Your name</label>
+      <input id="dueno" name="dueno" required>
+      <label for="cel">Your cell (unhappy-customer replies go here)</label>
+      <input id="cel" name="cel" inputmode="tel" required placeholder="(555) 123-4567">
+      <label for="tel">Public phone customers can call</label>
+      <input id="tel" name="tel" inputmode="tel">
+      <label for="email">Your email</label>
+      <input id="email" name="email" type="email" required>
+    </fieldset>
+    <fieldset>
+      <legend>Plan</legend>
+      <label class="plan"><input type="radio" name="plan" value="monthly" checked><span><b>Monthly</b><small>Setup + monthly, cancel anytime</small></span></label>
+      <label class="plan"><input type="radio" name="plan" value="annual"><span><b>Annual</b><small>One payment, 12 months, setup included</small></span></label>
+    </fieldset>
+    <label for="notas">Anything I should know? (busy days, how you book, etc.)</label>
+    <textarea id="notas" name="notas" rows="3"></textarea>
+    <button type="submit">Send my details</button>
+    <p id="ok">Your email app should open with everything filled in. Just press send.</p>
+    <p class="fine">Your details are only used to set up your account and register your texting number, as US carriers require. Starlift Local · 22 Rustic Ridge Road, Randolph, NJ 07869.</p>
+  </form>
+</main>
+<script>
+const f = document.getElementById('f');
+const n = new URLSearchParams(location.search).get('n');
+if (n) f.negocio.value = n;
+f.addEventListener('submit', e => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(f));
+  const lineas = Object.entries(d).map(([k, v]) => `${k}: ${String(v).replace(/\r?\n/g, ' ')}`).join('\n');
+  const asunto = `STARLIFT-ALTA: ${d.negocio}`;
+  location.href = `mailto:morganilysa@gmail.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(lineas)}`;
+  document.getElementById('ok').style.display = 'block';
+});
+</script>
+</body>
+</html>
